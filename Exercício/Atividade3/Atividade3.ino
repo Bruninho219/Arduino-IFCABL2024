@@ -1,3 +1,4 @@
+//wokwi.com/projects/406379307915752449
 #define pinoPotenciometro A0  // define pino analógica A0
 #define pinoBotao 8           // define pino digital D8
 #define pinoLed 7             // define pino digital D7

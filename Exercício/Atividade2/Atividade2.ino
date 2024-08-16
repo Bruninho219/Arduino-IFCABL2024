@@ -18,7 +18,6 @@ void loop()
   
   if(digitalRead(pinoBotao) == HIGH) // se botão for pressionado
   {
-    Serial.println("Button is pressed");
     if(ligado==false)                // se ligado for falso...
     {
       ligado=true;                   // ...ele fica verdadeiro
