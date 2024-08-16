@@ -1,23 +1,13 @@
-//wokwi.com/projects/406378336017804289
-// Comentário de linha única
-
-/*
-  Comentário
-  de
-  múltiplas
-  linhas
-*/
-#define pinoLed 7
 #define pinoSensor A0        // Define uma constante chamada pinoSensor com o valor A0
-// #define cria uma constante que não pode ser alterada durante a execução e não precisa especificar o tipo de dado
+#define pinoLed 7
 
 int sensorA0 = 0;            // Declara a variável sensorA0 do tipo inteiro e define 0 como valor inicial
 float tensao;                // Declara a variável tensao do tipo float
 
-
 void setup()
 {
   pinMode(pinoLed, OUTPUT);         // configura D7 como saída digital
+  pinMode(pinoSensor, INPUT);         // configura D7 como saída digital
   Serial.begin(9600);        // Inicia a comunicação serial a 9600 bps
   delay(100);                // Aguarda 100 milissegundos
 }
@@ -30,18 +20,9 @@ void loop()
   Serial.println(tensao);                       // Imprime o valor da tensão calculada (0 - 5.0V)
   Serial.print("Valor: ");
   Serial.println(sensorA0);                     // Imprime o valor lido (0 - 1023)
-  Serial.println();             
   digitalWrite(pinoLed, tensao);
+  Serial.println();                             // Quebra de linha
   Serial.println();
   Serial.println();
   delay(1000);                                  // Atraso de 1000 milissegundos (1 segundo)
 }
-
-
-
-
-
-
-
-
-
