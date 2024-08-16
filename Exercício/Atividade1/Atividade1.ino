@@ -32,3 +32,12 @@ void loop()
   Serial.println();
   delay(1000);                                  // Atraso de 1000 milissegundos (1 segundo)
 }
+
+
+
+
+
+
+
+
+
