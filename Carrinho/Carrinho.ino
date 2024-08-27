@@ -69,6 +69,7 @@ DCMotor Motor1, Motor2;
 int valorIVE = 0;
 int valorIVD = 0;
 int dir = 11; //inicia parado
+int time = 50; //tempo em ms que se atualiza os comandos
 
 void setup()
 {
@@ -121,5 +122,5 @@ void loop()
     Motor1.Tras();
     Motor2.Tras();
   }
-  delay(500);
+  delay(time);
 }
