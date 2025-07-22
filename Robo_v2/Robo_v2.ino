@@ -213,15 +213,15 @@ void loop()
 
     /*
         Aqui é uma função composta...
-    //Primeiro, crio a variável corEsq do tipo inteiro
-    //Segundo, essa variável vai receber o valor que está sendo retornado na função classificarCor
-    //Terceiro, que por sua vez, está sendo enviado o retorno de identificar cor
+        Primeiro, crio a variável corEsq do tipo inteiro
+        Segundo, essa variável vai receber o valor que está sendo retornado na função classificarCor
+        Terceiro, que por sua vez, está sendo enviado o retorno de identificar cor
     
-    Ex.: 
-        - sensorEsquerdo: é uma variável struct, que dentro dela tem as variáveis reb, blue e green
-        - identificarCor(sensorEsquerdo): nessa função, ele irá retornar o nome da cor, exemplo "Branco"
-        - classificarCor("Branco"): ele retornará o número correspondente a cor, sendo o "2" nesse caso
-        - por sua vez, corEsq receberá o número "2"
+        Ex.: 
+            - sensorEsquerdo: é uma variável struct, que dentro dela tem as variáveis reb, blue e green
+            - identificarCor(sensorEsquerdo): nessa função, ele irá retornar o nome da cor, exemplo "Branco"
+            - classificarCor("Branco"): ele retornará o número correspondente a cor, sendo o "2" nesse caso
+            - por sua vez, corEsq receberá o número "2"
     */
     int corEsq = classificarCor(identificarCor(sensorEsquerdo));
     int corDir = classificarCor(identificarCor(sensorDireito));
