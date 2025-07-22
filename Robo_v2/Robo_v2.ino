@@ -12,6 +12,7 @@
 #define S3_DIR 8
 #define OUT_DIR 9
 
+// Estrutura para cores
 struct RGB
 {
     int red;
@@ -53,6 +54,7 @@ class DCMotor
 DCMotor Motor1;
 DCMotor Motor2;
 
+//Função que retorta a estrutura RGB com o nome de cor
 RGB lerRGB(int s2, int s3, int out)
 {
     RGB cor;
@@ -73,6 +75,7 @@ RGB lerRGB(int s2, int s3, int out)
     return cor;
 }
 
+//Apenas referencia e retorna o número correspondente a cor
 int classificarCor(const String &cor)
 {
     if (cor == "Branco") return 2;
@@ -82,6 +85,8 @@ int classificarCor(const String &cor)
     return 0;
 }
 
+// Aqui, com base nos valores medidos pelo sensor, ele vai verificar e decidir a cor medida
+// Assim, retornando a String com o nome da cor
 String identificarCor(const RGB &cor)
 {
     if (cor.red <= 14 && cor.green <= 12 && cor.blue <= 14)
@@ -96,6 +101,10 @@ String identificarCor(const RGB &cor)
         return "Nenhuma";
 }
 
+//Aqui foi usado uma referencia (&)
+//Basicamente, ele mostra as cores lidas e a cor identificada
+//Ex.1: [Esquerdo] R:10 G:10 B:10 → Branco
+//Ex.2: [Direito] R:10 G:10 B:10 → Branco
 void imprimirCor(const String &lado, const RGB &cor)
 {
     Serial.print("[" + lado + "] R:");
@@ -108,6 +117,8 @@ void imprimirCor(const String &lado, const RGB &cor)
     Serial.println(identificarCor(cor));
 }
 
+//Com base na cor, foi atribuido um numero para ele no metodo "classificarCor"
+//Poderiam ter sido usado os proprios nomes, mas comparação de é diferente se não me engano
 void Direcao(int E, int D)
 {
    /*
@@ -119,26 +130,31 @@ void Direcao(int E, int D)
    
     if (E == 5 && D == 5)
     {
+        //Parada
         Motor1.Parada();
         Motor2.Parada();
     }
     else if (E == 2 && D == 2)
     {
+        //Frente
         Motor1.Frente();
         Motor2.Frente();
     }
     else if (E > 4 && D < 4)
     {
+        //Direito
         Motor1.Tras();
         Motor2.Frente();
     }
     else if (E < 4 && D > 4)
     {
+        //Esquerdo
         Motor1.Frente();
         Motor2.Tras();
     }
     else if (E == 3 && D == 3)
     {
+        //Para por 10 segundos
         Motor1.Parada();
         Motor2.Parada();
         delay(10000);
@@ -183,17 +199,34 @@ void setup()
     Serial.begin(9600);
 }
 
+//Código começa a ser lido aqui
 void loop()
 {
+    //Faço as leituras na função lerRGB
+    //Após a leitura, esse valor é armazenado na variável sensorEsquerdo, que é do tipo RGB
     RGB sensorEsquerdo = lerRGB(S2_ESQ, S3_ESQ, OUT_ESQ);
     RGB sensorDireito = lerRGB(S2_DIR, S3_DIR, OUT_DIR);
 
+    //Já explicada na função
     imprimirCor("Esquerda", sensorEsquerdo);
     imprimirCor("Direita ", sensorDireito);
 
+    /*
+        Aqui é uma função composta...
+    //Primeiro, crio a variável corEsq do tipo inteiro
+    //Segundo, essa variável vai receber o valor que está sendo retornado na função classificarCor
+    //Terceiro, que por sua vez, está sendo enviado o retorno de identificar cor
+    
+    Ex.: 
+        - sensorEsquerdo: é uma variável struct, que dentro dela tem as variáveis reb, blue e green
+        - identificarCor(sensorEsquerdo): nessa função, ele irá retornar o nome da cor, exemplo "Branco"
+        - classificarCor("Branco"): ele retornará o número correspondente a cor, sendo o "2" nesse caso
+        - por sua vez, corEsq receberá o número "2"
+    */
     int corEsq = classificarCor(identificarCor(sensorEsquerdo));
     int corDir = classificarCor(identificarCor(sensorDireito));
 
+    //Cédigo para decidir a ação dos motores
     Direcao(corEsq, corDir);
 
     Serial.println("===============================");
