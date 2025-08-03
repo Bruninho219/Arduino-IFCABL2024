@@ -310,7 +310,7 @@ uint8_t classificarCor(char cor)
 
 void imprimirCor(bool l, const RGB &cor, char nomeCor)
 {
-    if(l==true) Serial.print("[Direito] R:");
+    if(l) Serial.print("[Direito] R:");
     else Serial.print("[Esquerdo] R:");
 
     Serial.print(cor.red);
@@ -331,7 +331,7 @@ void imprimirCor(bool l, const RGB &cor, char nomeCor)
 
 bool deteccao()
 {
-    float duracao=0;
+    float tempo=0;
     float distancia=0;
     uint8_t distanciaMinima=10;
 
@@ -343,13 +343,11 @@ bool deteccao()
     digitalWrite(US_TRIG, LOW);
 
     // Calcula o tempo de retorno do pulso
-    duracao = pulseIn(US_ECHO, HIGH);
+    tempo = pulseIn(US_ECHO, HIGH);
 
-    // Calcula o tempo de retorno do pulso
-    duracao = pulseIn(US_ECHO, HIGH);
     // Calcula a distância em centímetros
     // 0,034 = velocidade_do_som (cm) * 10^(-6) / segundo
-    distancia = duracao * 0.034 / 2;
+    distancia = tempo * 0.034029 / 2;
     Serial.print("Distancia: ");
     Serial.print(distancia);
     Serial.println(" cm");
@@ -407,7 +405,7 @@ void Direcao(uint8_t E, uint8_t D, uint8_t M, uint8_t R, bool O)
         Serial.println("{Parada}");
         Motor1.Parada();
         Motor2.Parada();
-        if(O=true) delay(M*100-100);
+        if(O) delay(M*100-100);
     }
     else if (E == 0 && D == 0)
     {
@@ -423,7 +421,7 @@ void Direcao(uint8_t E, uint8_t D, uint8_t M, uint8_t R, bool O)
         Serial.println("{Frente}");
         Motor1.Frente();
         Motor2.Frente();
-        if(O=true) delay(M*100-100);
+        if(O) delay(M*100-100);
     }
     else if (E > 3 && D < 4)
     {
@@ -433,7 +431,7 @@ void Direcao(uint8_t E, uint8_t D, uint8_t M, uint8_t R, bool O)
 
         Motor1.Frente();
         Motor2.Tras();
-        if (O==true) delay(R);
+        if (O) delay(R);
         else delay(100*O);
     }
     else if (E < 4 && D > 3)
@@ -444,7 +442,7 @@ void Direcao(uint8_t E, uint8_t D, uint8_t M, uint8_t R, bool O)
 
         Motor1.Tras();
         Motor2.Frente();
-        if (O==true) delay(R);
+        if (O) delay(R);
         else delay(100*O);
 
     }
