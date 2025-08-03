@@ -29,9 +29,9 @@ struct RGB
 
 struct AmostraCor
 {
-    int red;
-    int green;
-    int blue;
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
     char nome;
 };
 
@@ -179,9 +179,9 @@ const int NUM_VERDE = sizeof(calibragemG) / sizeof(calibragemG[0]);
 
 class DCMotor
 {
-  int pin1, pin2;
+  uint8_t pin1, pin2;
   public:
-    void Pinout(int in1, int in2)
+    void Pinout(uint8_t in1, uint8_t in2)
     {
         pin1 = in1;
         pin2 = in2;
@@ -270,7 +270,8 @@ char identificarCorAvancado(const RGB &cor)
     int menorDistancia = 1000000;
     char corMaisProxima = 'D';
 
-    auto verificarDistancia = [&](const AmostraCor *amostras, int tamanho) {
+    auto verificarDistancia = [&](const AmostraCor *amostras, int tamanho)
+    {
         for (int i = 0; i < tamanho; i++)
         {
             int dr = cor.red - amostras[i].red;
@@ -295,7 +296,7 @@ char identificarCorAvancado(const RGB &cor)
     return corMaisProxima;
 }
 
-int classificarCor(char cor)
+uint8_t classificarCor(char cor)
 {
     switch (cor)
     {
@@ -332,7 +333,7 @@ bool deteccao()
 {
     float duracao=0;
     float distancia=0;
-    int distanciaMinima=10;
+    uint8_t distanciaMinima=10;
 
     // Gera um pulso ultrassônico
     digitalWrite(US_TRIG, LOW);
@@ -383,7 +384,7 @@ void obstaculo()
     
 }
 
-void Direcao(int E, int D, int M, int R, bool O)
+void Direcao(uint8_t E, uint8_t D, uint8_t M, uint8_t R, bool O)
 {
     Serial.print("Obstáculo*: ");
     Serial.println(O);
@@ -539,15 +540,15 @@ void loop()
     imprimirCor(true, sensorEsquerdo, corNomeEsq);
     imprimirCor(false, sensorDireito, corNomeDir);
 
-    int corEsq = classificarCor(corNomeEsq);
-    int corDir = classificarCor(corNomeDir);
+    uint8_t corEsq = classificarCor(corNomeEsq);
+    uint8_t corDir = classificarCor(corNomeDir);
 
     D=deteccao();
 
     Serial.print("Obstáculo: ");
     Serial.println(D);
 
-    //Direcao(int E, int D, int M, int R, bool O)
+    //Direcao(uint8_t E, uint8_t D, uint8_t M, uint8_t R, bool O)
     Direcao(corEsq, corDir, 1, random(RAND), D);
     delay(100);
 
