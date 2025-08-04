@@ -266,7 +266,7 @@ char identificarCorAvancado(const RGB &cor)
         return 'W';
     if(cor.red>=17 && cor.green>=17 && cor.blue>=17)
         return 'B';
-
+    
     int menorDistancia = 1000000;
     char corMaisProxima = 'D';
 
@@ -369,28 +369,29 @@ void obstaculo()
     //Comando para desviar de objeto
     Serial.println("{Desvio!}");
 
-    Direcao(0,  0,  1, 0, true); //Ré por 1 * 100ms
-    Direcao(9,  0, 10, 0, true); //Direito por 10 * 100ms
-    Direcao(2,  2, 20, 0, true); //Frente por 20 * 100ms
-    Direcao(5,  5,  1, 0, true); //Para por 1 * 100ms
-    Direcao(0,  9, 10, 0, true); //Esquerdo por 10 * 100ms
-    Direcao(2,  2, 40, 0, true); //Frente por 40 * 100ms
-    Direcao(5,  5,  1, 0, true); //Para por 1 * 100ms
-    Direcao(0,  9, 10, 0, true); //Esquerdo por 10 * 100ms
-    Direcao(2,  2, 20, 0, true); //Frente por 20 * 100ms
-    Direcao(9,  0, 10, 0, true); //Direito por 10 * 100ms
+    Direcao(0, 0,  1, 0, true); //Ré por 1 * 100ms
+    Direcao(9, 0, 10, 0, true); //Direito por 10 * 100ms
+    Direcao(2, 2, 20, 0, true); //Frente por 20 * 100ms
+    Direcao(5, 5,  1, 0, true); //Para por 1 * 100ms
+    Direcao(0, 9, 10, 0, true); //Esquerdo por 10 * 100ms
+    Direcao(2, 2, 40, 0, true); //Frente por 40 * 100ms
+    Direcao(5, 5,  1, 0, true); //Para por 1 * 100ms
+    Direcao(0, 9, 10, 0, true); //Esquerdo por 10 * 100ms
+    Direcao(2, 2, 20, 0, true); //Frente por 20 * 100ms
+    Direcao(9, 0, 10, 0, true); //Direito por 10 * 100ms
     
 }
 
 void Direcao(uint8_t E, uint8_t D, uint8_t M, uint8_t R, bool O)
 {
+    //M = Multiplicador
     Serial.print("Obstáculo*: ");
     Serial.println(O);
 
-    //5=Preto
     //2=Branco
     //3=Vermelho
     //4=Verde
+    //5=Preto
     //0=Ré
 
     //Ignora verde e vermelho por enquanto
@@ -517,7 +518,7 @@ void setup()
 
 void loop()
 {
-    bool D=false;
+    bool D=false; //detecção
 
     Serial.println("Total de amostras: ");
     Serial.print("Preto: ");
@@ -532,8 +533,18 @@ void loop()
     RGB sensorEsquerdo = lerRGB(S2_ESQ, S3_ESQ, OUT_ESQ);
     RGB sensorDireito = lerRGB(S2_DIR, S3_DIR, OUT_DIR);
 
-    char corNomeEsq = identificarCorAvancado(sensorEsquerdo);
-    char corNomeDir = identificarCorAvancado(sensorDireito);
+    char corNomeEsq='D';
+    char corNomeDir='D';
+
+    if(buscarAmostraExistente(sensorEsquerdo)=='D')
+        corNomeEsq = identificarCorAvancado(sensorEsquerdo);
+    else
+        corNomeEsq = buscarAmostraExistente(sensorEsquerdo);
+    
+    if(buscarAmostraExistente(sensorDireito)=='D')
+        corNomeDir = identificarCorAvancado(sensorDireito);
+    else
+        corNomeDir = buscarAmostraExistente(sensorDireito);
 
     imprimirCor(true, sensorEsquerdo, corNomeEsq);
     imprimirCor(false, sensorDireito, corNomeDir);
