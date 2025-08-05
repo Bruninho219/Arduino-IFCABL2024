@@ -385,6 +385,7 @@ void obstaculo()
 void Direcao(uint8_t E, uint8_t D, uint8_t M, uint8_t R, bool O)
 {
     //M = Multiplicador
+    //R = Randomico
     Serial.print("Obstáculo*: ");
     Serial.println(O);
 
@@ -567,3 +568,4 @@ void loop()
     Serial.println("===============================");
     //delay(1000);
 }
+
