@@ -519,7 +519,7 @@ void setup()
 
 void loop()
 {
-    bool D=false; //detecção
+    //bool D=false; //Detecção
 
     Serial.println("Total de amostras: ");
     Serial.print("Preto: ");
@@ -532,7 +532,7 @@ void loop()
     Serial.println(NUM_VERMELHO);
 
     RGB sensorEsquerdo = lerRGB(S2_ESQ, S3_ESQ, OUT_ESQ);
-    RGB sensorDireito = lerRGB(S2_DIR, S3_DIR, OUT_DIR);
+    RGB sensorDireito  = lerRGB(S2_DIR, S3_DIR, OUT_DIR);
 
     char corNomeEsq='D';
     char corNomeDir='D';
@@ -553,13 +553,15 @@ void loop()
     uint8_t corEsq = classificarCor(corNomeEsq);
     uint8_t corDir = classificarCor(corNomeDir);
 
-    D=deteccao();
+    //D=deteccao();
 
     Serial.print("Obstáculo: ");
-    Serial.println(D);
+    //Serial.println(D);
+    Serial.println(deteccao());
 
     //Direcao(uint8_t E, uint8_t D, uint8_t M, uint8_t R, bool O)
-    Direcao(corEsq, corDir, 1, random(RAND), D);
+    //Direcao(corEsq, corDir, 1, random(RAND), D);
+    Direcao(corEsq, corDir, 1, random(RAND), false);
     delay(100);
 
     Motor1.Parada();
@@ -568,4 +570,5 @@ void loop()
     Serial.println("===============================");
     //delay(1000);
 }
+
 
