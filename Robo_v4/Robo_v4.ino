@@ -174,15 +174,15 @@ void loop()
 
   if(valorIVD < preto && valorIVE < preto )
   {
-  Motor1.Frente();
-  Motor2.Frente();
-  Serial.println("33333");
+    Motor1.Frente();
+    Motor2.Frente();
+    Serial.println("33333");
   }
   if(valorIVD > preto && valorIVE > preto )
   {
-  Motor1.Parada();
-  Motor2.Parada();
-  Serial.println("44444");
+    Motor1.Parada();
+    Motor2.Parada();
+    Serial.println("44444");
   }
 
   delay(100);
@@ -202,9 +202,5 @@ void loop()
     Motor2.Frente();
     delay(700);
   }
-  */
-
-  
+  */ 
 }
-
-  
