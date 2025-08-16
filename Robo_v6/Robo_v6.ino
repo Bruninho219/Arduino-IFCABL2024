@@ -3,18 +3,20 @@
 #define US_ECHO A5
 
 // SENSOR ESQUERDO
-#define S0_ESQ 0
-#define S1_ESQ 1
-#define S2_ESQ 2
-#define S3_ESQ 3
-#define OUT_ESQ 4
+#define S0_ESQ 0   //
+#define S1_ESQ 1   //roxo > 12 laranja
+#define S2_ESQ 2   //
+#define S3_ESQ 3   //
+#define OUT_ESQ 4  //
 
 // SENSOR DIREITO
-#define S0_DIR A3
-#define S1_DIR 12
-#define S2_DIR 7
-#define S3_DIR 8
-#define OUT_DIR 9 
+#define S0_DIR A3 //
+#define S1_DIR 12 //laranja > 01 roxo
+#define S2_DIR 7  //
+#define S3_DIR 8  //
+#define OUT_DIR 9 //
+
+bool ignoraUS=true;
 
 // Estrutura para cores
 struct RGB
@@ -90,27 +92,47 @@ uint8_t classificarCor(const String &cor)
 
 // Aqui, com base nos valores medidos pelo sensor, ele vai verificar e decidir a cor medida
 // Assim, retornando a String com o nome da cor
-String identificarCor(const RGB &cor)
+String identificarCor(const RGB &cor, bool lado)
 {
-    if (cor.red <= 12 && cor.green <= 12 && cor.blue <= 12)
+    if (lado)
+    {
+        if (cor.red <= 12 && cor.green <= 12 && cor.blue <= 12)
+        {
+            Serial.println("É branco direito");
+            return "Branco";
+        }
+        else Serial.println("É preto direito");
+        return "Preto";
+    }
+    else
+    {
+        if (cor.red>25)
+        {
+            Serial.println("É preto esquerdo");
+            return "Preto";
+        }
+        else Serial.println("É branco esquerdo");
         return "Branco";
-    else return "Preto";
+    }
 }
 
 //Aqui foi usado uma referencia (&)
 //Basicamente, ele mostra as cores lidas e a cor identificada
 //Ex.1: [Esquerdo] R:10 G:10 B:10 → Branco
 //Ex.2: [Direito] R:10 G:10 B:10 → Branco
-void imprimirCor(const String &lado, const RGB &cor)
+void imprimirCor(bool lado, const RGB &cor)
 {
-    Serial.print("[" + lado + "] R:");
+    if(lado)
+        Serial.print("[ Direito ]  R:");
+    else
+        Serial.print("[ Esquerdo ] R:");
     Serial.print(cor.red);
     Serial.print(" G:");
     Serial.print(cor.green);
     Serial.print(" B:");
     Serial.print(cor.blue);
     Serial.print(" → ");
-    Serial.println(identificarCor(cor));
+    Serial.println(identificarCor(cor, lado));
 }
 
 void ultrassom()
@@ -138,18 +160,18 @@ void ultrassom()
         Serial.print("Obstáculo detectado a menos de ");
         Serial.print(distanciaMinima);
         Serial.println("cm!");
-        //obstaculo();
+        obstaculo();
     }
     else Serial.println("Obstáculo não detectado!");
 }
 
 void obstaculo()
 {
-    int giro90=1100;
-    int frente=1500;
-    int avanca=3500;
-    uint8_t m1=3; 
-    uint8_t m2=0;
+    int giro90=1150;
+    int frente=1750;
+    int avanca=5000;
+    uint8_t m1=0; 
+    uint8_t m2=8;
 
     Serial.println("{Iniciado o desvio!}");
 
@@ -233,29 +255,34 @@ void obstaculo()
 //Poderiam ter sido usado os proprios nomes, mas comparação de é diferente se não me engano
 void Direcao(uint8_t E, uint8_t D)
 {
+    Serial.print("E: ");
+    Serial.println(E);
+    Serial.print("D: ");
+    Serial.println(D);
+    
     /*
     Branco=2
     Preto=5
     Parada=9
     */
 
-    uint8_t a=7; 
-    uint8_t b=0;
-    uint8_t DL=75;
-    E=5;
-    D=5;
+    uint8_t m1=0; 
+    uint8_t m2=8; //verde
+    uint8_t DL=100;
+    //E=5;
+    //D=5;
 
     if (E == 5 && D == 5)
     {
         //Parada
-        Motor1.Frente(a);
-        Motor2.Frente(b);
+        Motor1.Frente(m1);
+        Motor2.Frente(m2);
     }
     else if (E == 2 && D == 2)
     {
         //Frente
-        Motor1.Frente(a);
-        Motor2.Frente(b);
+        Motor1.Frente(m1);
+        Motor2.Frente(m2);
     }
     else if (E == 9 && D == 9)
     {
@@ -266,12 +293,23 @@ void Direcao(uint8_t E, uint8_t D)
     }
     else if (E == 5 && D == 2)
     {   
-        Motor1.Tras(a);
-        Motor2.Tras(b);
+        Motor1.Tras(m1);
+        Motor2.Tras(m2);
         delay(DL);
         //Direito
-        Motor1.Tras(a);
-        Motor2.Frente(b);
+        Motor1.Tras(m1);
+        Motor2.Frente(m2);
+        delay(DL+random(100));
+
+    }
+    else if (E == 2 && D == 5)
+    {   
+        Motor1.Tras(m1);
+        Motor2.Tras(m2);
+        delay(DL);
+        //Esquerdo
+        Motor1.Frente(m1);
+        Motor2.Tras(m2);
         delay(DL+random(100));
 
     }
@@ -303,8 +341,8 @@ void setup()
     digitalWrite(S0_DIR, HIGH);
     digitalWrite(S1_DIR, HIGH);
 
-    Motor1.Pinout(6, 5);
-    Motor2.Pinout(11, 10);
+    Motor1.Pinout(11, 10);
+    Motor2.Pinout(6, 5);
 
     Serial.begin(9600);
 }
@@ -312,18 +350,18 @@ void setup()
 //Código começa a ser lido aqui
 void loop()
 {
-    ultrassom();
+    if(ignoraUS==false) ultrassom();
     //Faço as leituras na função lerRGB
     //Após a leitura, esse valor é armazenado na variável sensorEsquerdo, que é do tipo RGB
     RGB sensorEsquerdo = lerRGB(S2_ESQ, S3_ESQ, OUT_ESQ);
     RGB sensorDireito = lerRGB(S2_DIR, S3_DIR, OUT_DIR);
 
     //Já explicada na função
-    imprimirCor("Esquerda", sensorEsquerdo);
-    imprimirCor("Direita ", sensorDireito);
+    imprimirCor(false, sensorEsquerdo);
+    imprimirCor(true, sensorDireito);
 
-    uint8_t corEsq = classificarCor(identificarCor(sensorEsquerdo));
-    uint8_t corDir = classificarCor(identificarCor(sensorDireito));
+    uint8_t corEsq = classificarCor(identificarCor(sensorEsquerdo, false));
+    uint8_t corDir = classificarCor(identificarCor(sensorDireito, true));
 
     //Cédigo para decidir a ação dos motores
     Direcao(corEsq, corDir);
@@ -331,5 +369,6 @@ void loop()
     Direcao(9,9);
     Serial.println("===============================");
     delay(50);
-    delay(950);
+    ignoraUS=false;
+    //delay(950);
 }   
