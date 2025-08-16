@@ -16,7 +16,7 @@
 #define S3_DIR 8  //
 #define OUT_DIR 9 //
 
-bool ignoraUS=true;
+int ignoraUS=0;
 
 // Estrutura para cores
 struct RGB
@@ -171,7 +171,7 @@ void obstaculo()
     int frente=1750;
     int avanca=5000;
     uint8_t m1=0; 
-    uint8_t m2=8;
+    uint8_t m2=8; //verde
 
     Serial.println("{Iniciado o desvio!}");
 
@@ -347,7 +347,7 @@ void setup()
 //Código começa a ser lido aqui
 void loop()
 {
-    if(ignoraUS==false) ultrassom();
+    if(ignoraUS>10) ultrassom();
     //Faço as leituras na função lerRGB
     //Após a leitura, esse valor é armazenado na variável sensorEsquerdo, que é do tipo RGB
     RGB sensorEsquerdo = lerRGB(S2_ESQ, S3_ESQ, OUT_ESQ);
@@ -366,6 +366,6 @@ void loop()
     Direcao(9,9);
     Serial.println("===============================");
     delay(50);
-    ignoraUS=false;
+    ignoraUS++;
     //delay(950);
 }   
