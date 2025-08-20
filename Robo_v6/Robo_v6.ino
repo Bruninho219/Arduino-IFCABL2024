@@ -269,8 +269,8 @@ void Direcao(uint8_t E, uint8_t D)
     uint8_t m1=0; 
     uint8_t m2=8; //verde
     uint8_t DL=100;
-    E=5;
-    D=5;
+    //E=5;
+    //D=5;
 
     if (E == 5 && D == 5)
     {
