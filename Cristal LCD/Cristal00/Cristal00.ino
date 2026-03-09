@@ -1,3 +1,5 @@
+//https://deepbluembedded.com/lcd-custom-character-generator/
+
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
