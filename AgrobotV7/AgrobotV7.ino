@@ -1,15 +1,16 @@
 #include <Ultrasonic.h>
 
-#define pinoUSTrig 52
-#define pinoUSEcho 50
-
-#define pinoSensorIVD 2
-#define pinoSensorIVE 3
+#define pinoUST 4
+#define pinoUSE 5
+#define pinoSensorIVD 3
+#define pinoSensorIVE 2
 
 const uint8_t m1=0; 
-const uint8_t m2=8; //é a compensaçao do motot 2
+const uint8_t m2=8;
+int i=0;
 
-Ultrasonic ultrasonic(pinoUSTrig, pinoUSEcho);
+//Ultrasonic ultrasonic(pinoUST, pinoUSE);
+Ultrasonic ultrasonic(4, 5);
 
 class DCMotor
 {
@@ -26,21 +27,13 @@ class DCMotor
 
   void Frente(uint8_t x)
   {
-    if ( spd+x > 255 ) 
-      analogWrite(pin1, 255);
-    else
-      analogWrite(pin1, spd+x);
-
+    analogWrite(pin1, spd+x);
     digitalWrite(pin2, LOW);
   }
 
   void Tras(uint8_t x)
   {
     digitalWrite(pin1, LOW);
-
-    if (spd+x >255)
-    analogWrite(pin2, 255);
-    else
     analogWrite(pin2, spd+x);
   }
 
@@ -111,10 +104,21 @@ void Direcao(int E, int D)
 void Desvio()
 {
   int distanciaMinima=20;
+  //long microsec = ultrasonic.timing();
+  digitalWrite(pinoUST, LOW);
+  delayMicroseconds(2);
 
-  long microsec = ultrasonic.timing();
-  float distancia = ultrasonic.convert(microsec, Ultrasonic::CM);
+  digitalWrite(pinoUST, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pinoUST, LOW);
 
+  long duration = pulseIn(pinoUSE, HIGH, 30000);
+
+  /*float distancia = ultrasonic.convert(microsec, Ultrasonic::CM);
+  int distancia = ultrasonic.read();
+  */
+    
+  long distancia = duration * 0.034 / 2;
   Serial.print("Distancia: ");
   Serial.print(distancia);
   Serial.println(" cm");
@@ -138,7 +142,7 @@ void obstaculo()
 
     Serial.println("{Iniciado o desvio!}");
 
-    Serial.println("01 Para");
+   /* Serial.println("01 Para");
     Motor1.Parada();
     Motor2.Parada();
     delay(100);
@@ -152,12 +156,12 @@ void obstaculo()
     Motor1.Parada();
     Motor2.Parada();
     delay(100);
-
+*/
     Serial.println("04 Frente");
     Motor1.Frente(m1);
     Motor2.Frente(m2);
     delay(frente);
-
+/*
     Serial.println("05 Para");
     Motor1.Parada();
     Motor2.Parada();
@@ -213,31 +217,32 @@ void obstaculo()
     Motor2.Parada();
     delay(100);
     digitalWrite(13, LOW);
+    */
 }
 
 void setup()
 {
+  pinMode(pinoUST, OUTPUT);
+  pinMode(pinoUSE, INPUT);
+
   pinMode(13, OUTPUT);
   pinMode(pinoSensorIVE, INPUT);
   pinMode(pinoSensorIVD, INPUT);
 
-  //pinMode (pinoUSTrig, OUTPUT);
-  //pinMode (pinoUSEcho, INPUT);
-
-  Motor1.Pinout(6, 7);
-  Motor2.Pinout(8, 9);
+  Motor1.Pinout(8, 9);
+  Motor2.Pinout(6, 7);
 
   Serial.begin(9600);
 }
-
-//Código começa a ser lido aqui
 void loop()
 {
   int valorIVD = digitalRead(pinoSensorIVD);
   int valorIVE = digitalRead(pinoSensorIVE);
 
-  //Código para decidir a ação dos motores
-  Desvio();
+  //Desvio();
   Direcao(valorIVE, valorIVD);
   delay(50);
+  Serial.print("Cont: ");
+  Serial.println(i);
+  i++;
 }
