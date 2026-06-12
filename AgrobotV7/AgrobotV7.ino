@@ -6,7 +6,7 @@
 #define pinoSensorIVE 2
 
 const uint8_t m1=0; //esquerdo
-const uint8_t m2=20; //direito
+const uint8_t m2=5; //direito
 int i=0;
 
 //Ultrasonic ultrasonic(pinoUST, pinoUSE);
@@ -66,10 +66,11 @@ void Direcao(int E, int D)
   Branco=0
   Preto=1
   */
-  uint8_t dlRe=500;
+  uint8_t dlRe=100;
   uint8_t dlGiro=500;
   uint8_t dlRandom=150;
   uint8_t PotenciaGiro=100;
+  uint8_t dlFrente=100;
   
   
   if (E == 1 && D == 1)
@@ -77,12 +78,20 @@ void Direcao(int E, int D)
     //Frente
     Motor1.Frente(m1);
     Motor2.Frente(m2);
+    delay(dlFrente);
+    Motor1.Parada();
+    Motor2.Parada();
+    delay(50);
   }
     else if (E == 0 && D == 0)
   {
     //Frente
     Motor1.Frente(m1);
     Motor2.Frente(m2);
+    delay(dlFrente);
+    Motor1.Parada();
+    Motor2.Parada();
+    delay(50);
   }
 
   else if (E == 1 && D == 0)
