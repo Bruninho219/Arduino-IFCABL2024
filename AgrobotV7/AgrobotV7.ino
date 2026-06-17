@@ -1,20 +1,21 @@
 #include <Ultrasonic.h>
 
-#define pinoUST 5
-#define pinoUSE 4
-#define pinoSensorIVD 3
-#define pinoSensorIVE 2
+#define pinoUST 22
+#define pinoUSE 23
+#define pinoSensorIVD1 A2
+#define pinoSensorIVE1 A0
+#define pinoSensorIVD2 A3
+#define pinoSensorIVE2 A1
 
 const uint8_t m1=0; //esquerdo
 const uint8_t m2=5; //direito
 int i=0;
 
-//Ultrasonic ultrasonic(pinoUST, pinoUSE);
 Ultrasonic ultrasonic(pinoUST, pinoUSE);
 
 class DCMotor
 {
-  uint8_t spd = 100, pin1, pin2;
+  uint8_t spd = 80, pin1, pin2;
   
   public:
   void Pinout(uint8_t in1, uint8_t in2)
@@ -60,42 +61,38 @@ void Direcao(int E, int D)
   Serial.println(D);
   Serial.print("[E] ");
   Serial.println(E);
-  Serial.println();
 
   /*
   Branco=0
   Preto=1
   */
-  uint8_t dlRe=100;
-  uint8_t dlGiro=500;
-  uint8_t dlRandom=150;
+  uint8_t dlRe=200;
+  uint8_t dlGiro=300;
+  uint8_t dlRandom=100;
   uint8_t PotenciaGiro=100;
-  uint8_t dlFrente=100;
+  uint8_t dlFrente=25;
   
   
-  if (E == 1 && D == 1)
+  if (E >= 1 && D >= 1)
   {
     //Frente
+    Serial.println("[Frente 11]");
     Motor1.Frente(m1);
     Motor2.Frente(m2);
     delay(dlFrente);
-    Motor1.Parada();
-    Motor2.Parada();
-    delay(50);
   }
     else if (E == 0 && D == 0)
   {
     //Frente
+    Serial.println("[Frente 00]");
     Motor1.Frente(m1);
     Motor2.Frente(m2);
     delay(dlFrente);
-    Motor1.Parada();
-    Motor2.Parada();
-    delay(50);
   }
 
-  else if (E == 1 && D == 0)
-  {   
+  else if (E >= 1 && D == 0)
+  {
+    Serial.println("[Direita]");
     Motor1.Tras(m1);
     Motor2.Tras(m2);
     delay(dlRe);
@@ -105,8 +102,9 @@ void Direcao(int E, int D)
     delay(dlGiro+random(dlRandom));
 
   }
-  else if (E == 0 && D == 1)
-  {   
+  else if (E == 0 && D >= 1)
+  {
+    Serial.println("[Esquerda]");
     Motor1.Tras(m1);
     Motor2.Tras(m2);
     delay(dlRe);
@@ -117,6 +115,8 @@ void Direcao(int E, int D)
   }
   else
     Serial.println("Sla como caiu aqui!!!");
+
+  Serial.println();
 }
 
 void Desvio()
@@ -265,7 +265,7 @@ void obstaculo()
     digitalWrite(13, LOW);
 
     digitalWrite(20, LOW);  // apaga led amarelo
-    digitalWrite(21, LOW);  // apaga led vermelho    
+    digitalWrite(21, LOW);  // avapaga led vermelho    
 }
 
 void setup()
@@ -277,8 +277,10 @@ void setup()
   pinMode(pinoUSE, INPUT);
 
   pinMode(13, OUTPUT);
-  pinMode(pinoSensorIVE, INPUT);
-  pinMode(pinoSensorIVD, INPUT);
+  pinMode(pinoSensorIVE1, INPUT);
+  pinMode(pinoSensorIVD1, INPUT);
+  pinMode(pinoSensorIVE2, INPUT);
+  pinMode(pinoSensorIVD2, INPUT);
 
   Motor1.Pinout(8, 9); //esquerdo
   Motor2.Pinout(7, 6); //direito
@@ -287,13 +289,49 @@ void setup()
 }
 void loop()
 {
-  int valorIVD = digitalRead(pinoSensorIVD);
-  int valorIVE = digitalRead(pinoSensorIVE);
-
-  Desvio();
-  Direcao(valorIVE, valorIVD);
-  delay(50);
+  int linha=180;
   Serial.print("Cont: ");
   Serial.println(i);
+
+  int valorIVE1=analogRead(pinoSensorIVE1);
+  int valorIVD1=analogRead(pinoSensorIVD1);
+  int valorIVE2=analogRead(pinoSensorIVE2);
+  int valorIVD2=analogRead(pinoSensorIVD2);
+
+  Serial.print("E1 A0 *10: ");
+  Serial.println(valorIVE1);
+  Serial.print("D1 A2 *10: ");
+  Serial.println(valorIVD1);
+  
+  if(valorIVE1>linha)
+    valorIVE1=10;
+  else
+    valorIVE1=0;
+
+  if(valorIVD1>linha)
+    valorIVD1=10;
+  else
+    valorIVD1=0;
+
+
+  Serial.print("E2 A1 *01: ");
+  Serial.println(valorIVE2);
+  Serial.print("D2 A3 *01: ");
+  Serial.println(valorIVD2);
+  
+  if(valorIVE2>linha)
+    valorIVE2=1;
+  else
+    valorIVE2=0;
+
+  if(valorIVD2>linha)
+    valorIVD2=1;
+  else
+    valorIVD2=0;
+
+  //Desvio();
+  Direcao(valorIVE1+valorIVE2, valorIVD1+valorIVD2);
+  delay(50);
+
   i++;
 }
