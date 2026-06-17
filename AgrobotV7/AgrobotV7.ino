@@ -15,7 +15,7 @@ Ultrasonic ultrasonic(pinoUST, pinoUSE);
 
 class DCMotor
 {
-  uint8_t spd = 80, pin1, pin2;
+  uint8_t spd = 150, pin1, pin2;
   
   public:
   void Pinout(uint8_t in1, uint8_t in2)
@@ -92,6 +92,9 @@ void Direcao(int E, int D)
 
   else if (E >= 1 && D == 0)
   {
+    Motor1.Parada();
+    Motor2.Parada();
+    delay(50);
     Serial.println("[Direita]");
     Motor1.Tras(m1);
     Motor2.Tras(m2);
@@ -104,6 +107,9 @@ void Direcao(int E, int D)
   }
   else if (E == 0 && D >= 1)
   {
+    Motor1.Parada();
+    Motor2.Parada();
+    delay(50);
     Serial.println("[Esquerda]");
     Motor1.Tras(m1);
     Motor2.Tras(m2);
@@ -289,7 +295,7 @@ void setup()
 }
 void loop()
 {
-  int linha=180;
+  int linhaF=100, linhaT=180;
   Serial.print("Cont: ");
   Serial.println(i);
 
@@ -303,12 +309,12 @@ void loop()
   Serial.print("D1 A2 *10: ");
   Serial.println(valorIVD1);
   
-  if(valorIVE1>linha)
+  if(valorIVE1>linhaF)
     valorIVE1=10;
   else
     valorIVE1=0;
 
-  if(valorIVD1>linha)
+  if(valorIVD1>linhaF)
     valorIVD1=10;
   else
     valorIVD1=0;
@@ -319,12 +325,12 @@ void loop()
   Serial.print("D2 A3 *01: ");
   Serial.println(valorIVD2);
   
-  if(valorIVE2>linha)
+  if(valorIVE2>linhaT)
     valorIVE2=1;
   else
     valorIVE2=0;
 
-  if(valorIVD2>linha)
+  if(valorIVD2>linhaT)
     valorIVD2=1;
   else
     valorIVD2=0;
