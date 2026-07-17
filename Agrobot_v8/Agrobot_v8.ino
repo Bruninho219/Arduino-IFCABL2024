@@ -334,7 +334,7 @@ void setup()
 }
 void loop()
 {
-  int linhaF = 100, linhaT = 180;
+  int linha = 120;
   Serial.print("Cont: ");
   Serial.println(i);
 
@@ -355,12 +355,12 @@ void loop()
   Serial.print("D1 A2 *10: ");
   Serial.println(valorIVD1);
 
-  if(valorIVE1 > linhaF)
+  if(valorIVE1 > linha)
     valorIVE1 = 10;
   else
     valorIVE1 = 0;
 
-  if(valorIVD1 > linhaF)
+  if(valorIVD1 > linha)
     valorIVD1 = 10;
   else
     valorIVD1 = 0;
