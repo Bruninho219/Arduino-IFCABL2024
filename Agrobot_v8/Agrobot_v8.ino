@@ -12,34 +12,41 @@ int8_t j = 0;
 
 Ultrasonic ultrasonic(pinoUST, pinoUSE);
 
-class DCMotor {
+class DCMotor
+{
   uint8_t spd = 130, pin1, pin2;
 
 public:
-  void Pinout(uint8_t in1, uint8_t in2) {
+  void Pinout(uint8_t in1, uint8_t in2)
+  {
     pin1 = in1;
     pin2 = in2;
     pinMode(pin1, OUTPUT);
     pinMode(pin2, OUTPUT);
   }
 
-  void Frente(uint8_t x) {
-    if ((spd + x) > 255)
+  void Frente(uint8_t x)
+  {
+    if((spd + x) > 255)
       analogWrite(pin1, 255);
     else
       analogWrite(pin1, spd + x);
+
     digitalWrite(pin2, LOW);
   }
 
-  void Tras(uint8_t x) {
-    if ((spd + x) > 255)
+  void Tras(uint8_t x)
+  {
+    if((spd + x) > 255)
       analogWrite(pin2, 255);
     else
       analogWrite(pin2, spd + x);
+
     digitalWrite(pin1, LOW);
   }
 
-  void Parada() {
+  void Parada()
+  {
     digitalWrite(pin1, LOW);
     digitalWrite(pin2, LOW);
   }
@@ -48,7 +55,8 @@ public:
 DCMotor Motor1;
 DCMotor Motor2;
 
-void Direcao(int E, int D) {
+void Direcao(int E, int D)
+{
   Serial.print("[D] ");
   Serial.println(D);
   Serial.print("[E] ");
@@ -65,13 +73,17 @@ void Direcao(int E, int D) {
   uint8_t dlFrente = 25;
 
 
-  if (E >= 1 && D >= 1) {
+  if(E >= 1 && D >= 1)
+  {
     //Frente
     Serial.println("[Frente 11]");
     Motor1.Frente(m1);
     Motor2.Frente(m2);
     delay(dlFrente);
-  } else if (E == 0 && D == 0) {
+
+  }
+  else if(E == 0 && D == 0)
+  {
     //Frente
     Serial.println("[Frente 00]");
     Motor1.Frente(m1);
@@ -79,7 +91,8 @@ void Direcao(int E, int D) {
     delay(dlFrente);
   }
 
-  else if (E >= 1 && D == 0) {
+  else if(E >= 1 && D == 0)
+  {
     Motor1.Parada();
     Motor2.Parada();
     delay(50);
@@ -92,7 +105,10 @@ void Direcao(int E, int D) {
     Motor2.Frente(m2 + PotenciaGiro);
     delay(dlGiro + random(dlRandom));
 
-  } else if (E == 0 && D >= 1) {
+  }
+  
+  else if(E == 0 && D >= 1)
+  {
     Motor1.Parada();
     Motor2.Parada();
     delay(50);
@@ -104,7 +120,8 @@ void Direcao(int E, int D) {
     Motor1.Frente(m1 + PotenciaGiro);
     Motor2.Tras(m2 + PotenciaGiro);
     delay(dlGiro + random(dlRandom));
-  } else
+  }
+  else
     Serial.println("Sla como caiu aqui!!!");
 
   Serial.println();
@@ -121,18 +138,18 @@ void Desvio()
   Serial.print(distancia);
   Serial.println(" cm");
 
-  if (distancia == 0) {
+  if(distancia == 0)
     distancia = 21;
-  }
 
-  if (distancia < distanciaMinima) {
+  if(distancia < distanciaMinima)
+  {
     Serial.print("Obstáculo detectado a menos de ");
     Serial.print(distanciaMinima);
     Serial.println(" cm!");
     obstaculo();
-  } else {
-    Serial.println("Obstáculo não detectado!");
   }
+  else
+    Serial.println("Obstáculo não detectado!");
 }
 
 void obstaculo()
@@ -159,7 +176,7 @@ void obstaculo()
   digitalWrite(20, LOW);  // apaga led amarelo
   Serial.print("02 Vira lado ");
 
-  if (lado == true)
+  if(lado == true)
   {
     Serial.println("direito");
     Motor1.Tras(m1 + PotenciaGiro);
@@ -197,7 +214,7 @@ void obstaculo()
   digitalWrite(20, LOW);   // apaga led amarelo
   digitalWrite(21, HIGH);  // acende led vermelho
   Serial.print("06 Vira lado ");
-  if (lado == true)
+  if(lado == true)
   {
     Serial.println("direito");
     Motor1.Frente(m1 + PotenciaGiro);
@@ -235,7 +252,7 @@ void obstaculo()
   digitalWrite(20, LOW);   // apaga led amarelo
   digitalWrite(21, HIGH);  // acende led vermelho
   Serial.print("10 Vira lado ");
-  if (lado == true)
+  if(lado == true)
   {
     Serial.println("direito");
     Motor1.Frente(m1 + PotenciaGiro);
@@ -273,12 +290,13 @@ void obstaculo()
   digitalWrite(20, LOW);   // apaga led amarelo
   digitalWrite(21, HIGH);  // acende led vermelho
   Serial.print("14 Vira lado ");
-  if (lado == true)
+  if(lado == true)
   {
     Serial.println("direito");
     Motor1.Tras(m1 + PotenciaGiro);
     Motor2.Frente(m2 + PotenciaGiro);
-  } else
+  }
+  else
   {
     Serial.println("esquerdo");
     Motor2.Tras(m1 + PotenciaGiro);
@@ -297,7 +315,8 @@ void obstaculo()
   digitalWrite(21, LOW);  // avapaga led vermelho
 }
 
-void setup() {
+void setup()
+{
   pinMode(20, OUTPUT);  // led amarelo
   pinMode(21, OUTPUT);  // led vermelho
 
@@ -313,7 +332,8 @@ void setup() {
 
   Serial.begin(9600);
 }
-void loop() {
+void loop()
+{
   int linhaF = 100, linhaT = 180;
   Serial.print("Cont: ");
   Serial.println(i);
@@ -335,12 +355,12 @@ void loop() {
   Serial.print("D1 A2 *10: ");
   Serial.println(valorIVD1);
 
-  if (valorIVE1 > linhaF)
+  if(valorIVE1 > linhaF)
     valorIVE1 = 10;
   else
     valorIVE1 = 0;
 
-  if (valorIVD1 > linhaF)
+  if(valorIVD1 > linhaF)
     valorIVD1 = 10;
   else
     valorIVD1 = 0;
