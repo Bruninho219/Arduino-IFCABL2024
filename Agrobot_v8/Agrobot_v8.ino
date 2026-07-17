@@ -14,7 +14,7 @@ Ultrasonic ultrasonic(pinoUST, pinoUSE);
 
 class DCMotor
 {
-  uint8_t spd = 130, pin1, pin2;
+  uint8_t spd = 160, pin1, pin2;
 
 public:
   void Pinout(uint8_t in1, uint8_t in2)
@@ -160,9 +160,9 @@ void obstaculo()
   bool lado = true;  //true direito; false esquerdo
 
   digitalWrite(13, HIGH);
-  int giro90 = 550;
-  int frente = 1250;
-  int avanca = 2500;
+  int giro90 = 1100;
+  int frente = 1550;
+  int avanca = 5000;
 
   Serial.println("{Iniciado o desvio!}");
 
@@ -328,7 +328,7 @@ void setup()
   pinMode(pinoSensorIVD1, INPUT);
 
   Motor1.Pinout(8, 9);  //esquerdo
-  Motor2.Pinout(7, 6);  //direito
+  Motor2.Pinout(6, 7);  //direito
 
   Serial.begin(9600);
 }
@@ -341,6 +341,24 @@ void loop()
   int valorIVE1 = analogRead(pinoSensorIVE1);
   int valorIVD1 = analogRead(pinoSensorIVD1);
   delay(5);
+  
+  for (int k = 0; k < 3; k++)
+  {
+    int tempE = analogRead(pinoSensorIVE1);
+    if (tempE > valorIVE1)
+      valorIVE1 = tempE;
+
+    int tempD = analogRead(pinoSensorIVD1);
+    if (tempD > valorIVD1)
+      valorIVD1 = tempD;
+
+    if (tempE >= linha || tempD >= linha)
+      break;
+
+    delay(5);
+  }
+
+  /*
   valorIVE1 = valorIVE1+ analogRead(pinoSensorIVE1);
   valorIVD1 = valorIVD1+ analogRead(pinoSensorIVD1);
   delay(5);
@@ -349,6 +367,7 @@ void loop()
   
   valorIVE1 = valorIVE1 / 3;
   valorIVD1 = valorIVD1 / 3;
+  */
 
   Serial.print("E1 A0 *10: ");
   Serial.println(valorIVE1);
@@ -365,7 +384,7 @@ void loop()
   else
     valorIVD1 = 0;
 
-  if(j>=50)
+  if(j>=20)
   {
     Desvio();
     j=0;
