@@ -160,7 +160,7 @@ void obstaculo()
   bool lado = true;  //true direito; false esquerdo
 
   digitalWrite(13, HIGH);
-  int giro90 = 1100;
+  int giro90 = 1300;
   int frente = 1550;
   int avanca = 5000;
 
